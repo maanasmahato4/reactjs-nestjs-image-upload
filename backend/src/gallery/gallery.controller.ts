@@ -18,6 +18,13 @@ export class GalleryController {
     }
 
     @UseGuards(JwTAuthGuard)
+    @Post('/d')
+    async AddPhotoD(@Body() data: { title: string, userId: number }) {
+        await this.galleryService.addPhotod(data);
+        return { message: "success" };
+    }
+
+    @UseGuards(JwTAuthGuard)
     @Post('/')
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
@@ -27,9 +34,9 @@ export class GalleryController {
             }
         })
     }))
-    async AddPhoto(@Body() data: { title: string, userId: number }, @UploadedFile() photo: Express.Multer.File, @Res() res: Response) {
+    async AddPhoto(@Body() data: { title: string, userId: number }, @UploadedFile() photo: Express.Multer.File) {
         await this.galleryService.addPhoto(data, photo);
-        return res.json({ message: "success" });
+        return { message: "success" };
     }
 
     @UseGuards(JwTAuthGuard)

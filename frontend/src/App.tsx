@@ -1,35 +1,63 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { Routes, Route, Navigate, useNavigate } from "react-router-dom";
+import { Fragment, useContext, useEffect } from "react";
+import Navigation from "./components/Nav";
+import Home from "./pages/Home";
+import SignUp from "./pages/SignUp";
+import SignIn from "./pages/SignIn";
+import { AuthProvider, AuthContext } from "./context/AuthContext";
+
+
 
 function App() {
-  const [count, setCount] = useState(0)
 
+  function useProtectedRoute(redirectTo = "/signin") {
+    const { token, decodedToken } = useContext(AuthContext);
+    const navigate = useNavigate();
+  
+    useEffect(() => {
+      if (!token || !decodedToken) {
+        navigate(redirectTo, { replace: true });
+      }
+    }, [token, decodedToken, redirectTo]);
+  
+    return { token, decodedToken };
+  }
+
+  function ProtectedRoute({ element, redirectTo }: any) {
+    const { token, decodedToken } = useProtectedRoute(redirectTo);
+  
+    if (!decodedToken) {
+      return null; // or show a loading state if necessary
+    }
+  
+    return token && decodedToken ? (
+      element
+    ) : (
+      <Navigate to={redirectTo} replace />
+    );
+  }
+  
   return (
-    <>
-      <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
-    </>
-  )
+    <AuthProvider>
+      <Fragment>
+        <Navigation />
+        <Routes>
+          <Route path="/signup" element={<SignUp />} />
+          <Route path="/signin" element={<SignIn />} />
+          <Route
+            path="/"
+            element={
+              <ProtectedRoute
+                element={<Home />}
+                redirectTo="/signin"
+              />
+            }
+          />
+        </Routes>
+      </Fragment>
+    </AuthProvider>
+  );
 }
 
-export default App
+
+export default App;

@@ -11,14 +11,19 @@ async function bootstrap() {
   app.use(cookieParser());
   app.use(session({
     secret: 'session_secret',
-    resave: false,
+    resave: true,
     saveUninitialized: false,
     cookie: {
       secure: false,
-      httpOnly: false,
+      httpOnly: true,
       maxAge: 360000
     }
-  }))
+  }));
+  app.enableCors({
+    origin: ['http://localhost:3000', 'http://localhost:5173'],
+    credentials: true,
+    allowedHeaders: ['Content-Type', 'Authorization'],
+  })
   app.useGlobalPipes(new ValidationPipe({ whitelist: true }));
   app.useStaticAssets(join(__dirname, "../uploads"),{
     prefix: '/gallery'

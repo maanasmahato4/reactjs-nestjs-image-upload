@@ -17,6 +17,9 @@ export class GalleryService {
         const photos = await this.galleryRepo.find({ where: { userId: userId } })
         return res.json(photos);
     }
+    async addPhotod(data: { title: string, userId: number }) {
+        return await this.galleryRepo.save({ userId: data.userId, title: data.title});
+    }
 
     async addPhoto(data: { title: string, userId: number }, photo: Express.Multer.File) {
         return await this.galleryRepo.save({ userId: data.userId, title: data.title, fileName: photo.originalname });
