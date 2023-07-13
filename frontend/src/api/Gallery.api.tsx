@@ -5,7 +5,11 @@ export const useGalleryApi = () => {
     const { token, decodedToken } = useContext(AuthContext);
 
     const galleryApi = axios.create({
-        baseURL: "http://localhost:3000/gallery"
+        baseURL: "http://localhost:3000/gallery",
+        withCredentials: true,
+        headers: {
+            Authorization: `Bearer ${token}`,
+        }
     })
     const add = async ({ title, files }: { title: string; files: any }) => {
 
@@ -26,11 +30,20 @@ export const useGalleryApi = () => {
         await galleryApi.post("/uploads", formData, {
             withCredentials: true,
             headers: {
-                Authorization: `Bearer ${token}`,
                 "Content-Type": "multipart/form-data",
             },
         });
     };
 
-    return { add };
+    const getPhotos = async (userId: number) => {
+        const res = await galleryApi.get(`/${userId}`);
+        return res.data;
+    }
+
+    const deletePhoto = async (id: number) => {
+        const res = await galleryApi.delete(`/${id}`);
+        return res;
+    }
+
+    return { add, getPhotos, deletePhoto };
 }

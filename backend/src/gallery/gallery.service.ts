@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, BadRequestException } from '@nestjs/common';
 import { InjectRepository } from "@nestjs/typeorm";
 import { Repository } from "typeorm";
 import { Photo } from 'src/common/entity/gallery.entity';
@@ -14,11 +14,13 @@ export class GalleryService {
     ) { }
 
     async getPhoto(userId: number, res: Response) {
-        const photos = await this.galleryRepo.find({ where: { userId: userId } })
-        return res.json(photos);
-    }
-    async addPhotod(data: { title: string, userId: number }) {
-        return await this.galleryRepo.save({ userId: data.userId, title: data.title});
+        try {
+            const photos = await this.galleryRepo.find({ where: { userId: userId } })
+            return res.json(photos);
+        } catch (error) {
+            throw new BadRequestException(error);
+        }
+
     }
 
     async addPhoto(data: { title: string, userId: number }, photo: Express.Multer.File) {

@@ -18,13 +18,6 @@ export class GalleryController {
     }
 
     @UseGuards(JwTAuthGuard)
-    @Post('/d')
-    async AddPhotoD(@Body() data: { title: string, userId: number }) {
-        await this.galleryService.addPhotod(data);
-        return { message: "success" };
-    }
-
-    @UseGuards(JwTAuthGuard)
     @Post('/')
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
@@ -56,7 +49,7 @@ export class GalleryController {
 
     @UseGuards(JwTAuthGuard)
     @Delete('/:id')
-    async DeletePhoto(id: number) {
+    async DeletePhoto(@Param('id', ParseIntPipe) id: number) {
         return await this.galleryService.deletePhoto(id);
     }
 }
