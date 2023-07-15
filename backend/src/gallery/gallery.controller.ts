@@ -52,4 +52,11 @@ export class GalleryController {
     async DeletePhoto(@Param('id', ParseIntPipe) id: number) {
         return await this.galleryService.deletePhoto(id);
     }
+
+    @UseGuards(JwTAuthGuard)
+    @Get('/download/:id')
+    async downloadPhoto(@Param('id', ParseIntPipe) id: number, @Res() res: Response){
+        return await this.galleryService.DownloadPhoto(id, res);
+        
+    }
 }

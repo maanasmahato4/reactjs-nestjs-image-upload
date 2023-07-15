@@ -9,7 +9,7 @@ import { useGalleryApi } from "../api/Gallery.api";
 function ImgCard({ props }: any) {
     const { id, fileName } = props;
     const [show, setShow] = useState(false);
-    const { deletePhoto } = useGalleryApi();
+    const { deletePhoto, downloadPhoto } = useGalleryApi();
 
     const handleClose = () => setShow(false);
     return (
@@ -18,6 +18,9 @@ function ImgCard({ props }: any) {
                 <Button variant="danger" style={{ position: "absolute", left: "auto", right: "10px", top: "10px", zIndex: 1 }} onClick={async () => {
                     await deletePhoto(id);
                 }}>D</Button>
+                <Button variant="danger" style={{ position: "absolute", left: "auto", right: "50px", top: "10px", zIndex: 1 }} onClick={async () => {
+                    await downloadPhoto(id, fileName);
+                }}>download</Button>
                 <Card.Img variant="top" style={{cursor: "pointer" }} src={`http://localhost:3000/gallery/${fileName}`} className="img-overlay-c"  onClick={() => setShow(true)} />
             </Card>
             <Modal show={show} onHide={handleClose} fullscreen={true}>

@@ -39,10 +39,20 @@ export class GalleryService {
         if (!data) {
             throw new Error("Image not found!")
         }
-        const imagePath = path.join(__dirname, "../uploads" + data.fileName);
+        const imagePath = path.join(__dirname, "../uploads/" + data.fileName);
         if (fs.existsSync(imagePath)) {
             fs.unlinkSync(imagePath);
         }
         return await this.galleryRepo.delete(id)
+    }
+
+    async DownloadPhoto(id: number, res: Response) {
+        const photo = await this.galleryRepo.findOne({ where: { id: id } });
+        const imagePath = path.join(__dirname, "../uploads/" + photo.fileName);
+        if (fs.existsSync(imagePath)) {
+            res.download(imagePath);
+        } else {
+            return res.status(404).json({error: "file not found"})
+        }
     }
 }
