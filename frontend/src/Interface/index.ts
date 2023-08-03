@@ -34,5 +34,15 @@ export interface IAuthContext {
 
 export interface Iphotos {
     title: string,
+    album: string,
     files: File[]
+}
+
+
+
+// album types
+
+export interface IAlbum {
+    album_name: string,
+    user_id: number
 }

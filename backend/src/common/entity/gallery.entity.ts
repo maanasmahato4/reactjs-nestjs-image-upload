@@ -8,8 +8,8 @@ export class Photo {
     @Column()
     userId: number
 
-    @Column({default: ''})
-    title: string
+    @Column()
+    album: string
 
     @Column()
     fileName: string

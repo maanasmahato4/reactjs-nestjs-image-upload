@@ -23,13 +23,23 @@ export class GalleryService {
 
     }
 
-    async addPhoto(data: { title: string, userId: number }, photo: Express.Multer.File) {
-        return await this.galleryRepo.save({ userId: data.userId, title: data.title, fileName: photo.originalname });
+    async getPhotoByAlbum(userId: number, album: string, res: Response) {
+        try {
+            const photos = await this.galleryRepo.find({ where: { userId: userId, album: album } });
+            return res.json(photos);
+        } catch (error) {
+            throw new BadRequestException(error);
+        }
+
     }
 
-    async addPhotos(data: { title: string, userId: number }, photos: Array<Express.Multer.File>) {
+    async addPhoto(data: { album: string, userId: number }, photo: Express.Multer.File) {
+        return await this.galleryRepo.save({ userId: data.userId, album: data.album, fileName: photo.originalname });
+    }
+
+    async addPhotos(data: { album: string, userId: number }, photos: Array<Express.Multer.File>) {
         const promises = photos.map(async (photo) => {
-            return await this.galleryRepo.save({ userId: data.userId, title: data.title, fileName: photo.originalname });
+            return await this.galleryRepo.save({ userId: data.userId, album: data.album, fileName: photo.originalname });
         })
         return await Promise.all(promises);
     }
@@ -52,7 +62,7 @@ export class GalleryService {
         if (fs.existsSync(imagePath)) {
             res.download(imagePath);
         } else {
-            return res.status(404).json({error: "file not found"})
+            return res.status(404).json({ error: "file not found" })
         }
     }
 }

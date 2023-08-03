@@ -18,6 +18,12 @@ export class GalleryController {
     }
 
     @UseGuards(JwTAuthGuard)
+    @Get('/:userId/album/:album')
+    async GetPhotosByAlbum(@Param('userId', ParseIntPipe) userId: number, @Param('album') album: string, @Res() res: Response) {
+        return await this.galleryService.getPhotoByAlbum(userId, album, res);
+    }
+
+    @UseGuards(JwTAuthGuard)
     @Post('/')
     @UseInterceptors(FileInterceptor('file', {
         storage: diskStorage({
@@ -27,7 +33,7 @@ export class GalleryController {
             }
         })
     }))
-    async AddPhoto(@Body() data: { title: string, userId: number }, @UploadedFile() photo: Express.Multer.File) {
+    async AddPhoto(@Body() data: { album: string, userId: number }, @UploadedFile() photo: Express.Multer.File) {
         await this.galleryService.addPhoto(data, photo);
         return { message: "success" };
     }
@@ -42,9 +48,9 @@ export class GalleryController {
             }
         })
     }))
-    async Addphotos(@Body() data: { title: string, userId: number }, @UploadedFiles() photos: Array<Express.Multer.File>, @Res() res: Response) {
+    async Addphotos(@Body() data: { album: string, userId: number }, @UploadedFiles() photos: Array<Express.Multer.File>, @Res() res: Response) {
         await this.galleryService.addPhotos(data, photos);
-        return res.json({message: "success"});
+        return res.json({ message: "success" });
     }
 
     @UseGuards(JwTAuthGuard)
@@ -55,8 +61,8 @@ export class GalleryController {
 
     @UseGuards(JwTAuthGuard)
     @Get('/download/:id')
-    async downloadPhoto(@Param('id', ParseIntPipe) id: number, @Res() res: Response){
+    async downloadPhoto(@Param('id', ParseIntPipe) id: number, @Res() res: Response) {
         return await this.galleryService.DownloadPhoto(id, res);
-        
+
     }
 }

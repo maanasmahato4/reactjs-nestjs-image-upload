@@ -13,13 +13,14 @@ function Navigation() {
     return (
         <Navbar expand="lg" className="bg-body-tertiary">
             <Container>
-                <Navbar.Brand>Task Manager</Navbar.Brand>
+                <Navbar.Brand>Your Image Gallery</Navbar.Brand>
                 <Navbar.Toggle aria-controls="basic-navbar-nav" />
                 <Navbar.Collapse id="basic-navbar-nav">
                     <Nav className="me-auto">
                         {token ?
                             <Fragment>
                                 <Nav.Item><Link to="/" style={{ textDecoration: "none", marginInline: "1rem" }}>Home</Link></Nav.Item>
+                                <Nav.Item><Link to="/album" style={{ textDecoration: "none", marginInline: "1rem" }}>Album</Link></Nav.Item>
                                 <Nav.Item>
                                     <Button onClick={signout}>LogOut</Button>
                                 </Nav.Item>

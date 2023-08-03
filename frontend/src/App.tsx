@@ -5,6 +5,7 @@ import Home from "./pages/Home";
 import SignUp from "./pages/SignUp";
 import SignIn from "./pages/SignIn";
 import { AuthProvider, AuthContext } from "./context/AuthContext";
+import AddAlbum from "./pages/AddAlbum";
 
 
 
@@ -49,6 +50,15 @@ function App() {
             element={
               <ProtectedRoute
                 element={<Home />}
+                redirectTo="/signin"
+              />
+            }
+          />
+          <Route
+            path="/album"
+            element={
+              <ProtectedRoute
+                element={<AddAlbum />}
                 redirectTo="/signin"
               />
             }

@@ -7,9 +7,11 @@ import { GalleryModule } from './gallery/gallery.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './common/entity/user.entity';
 import { Photo } from './common/entity/gallery.entity';
+import { Album } from './common/entity/album.entity';
+import { AlbumModule } from './album/album.module';
 
 @Module({
-  imports: [UserModule, AuthModule, GalleryModule,
+  imports: [UserModule, AuthModule, GalleryModule, AlbumModule,
     TypeOrmModule.forRoot({
       type: 'mysql',
       host: 'localhost',
@@ -17,7 +19,7 @@ import { Photo } from './common/entity/gallery.entity';
       username: 'root',
       password: '',
       database: 'gallery',
-      entities: [User, Photo],
+      entities: [User, Photo, Album],
       synchronize: true,
     }),
   ],

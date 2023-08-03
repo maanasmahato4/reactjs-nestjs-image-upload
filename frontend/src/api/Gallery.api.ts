@@ -11,11 +11,11 @@ export const useGalleryApi = () => {
             Authorization: `Bearer ${token}`,
         }
     })
-    const add = async ({ title, files }: { title: string; files: any }) => {
+    const add = async ({ album, files }: { album: string; files: any }) => {
 
         const formData = new FormData();
-        formData.append("title", title);
         formData.append("userId", decodedToken.id);
+        formData.append("album", album);
 
         Object.values(files).forEach((fileItem: any) => {
             if (Array.isArray(fileItem)) {
@@ -40,6 +40,11 @@ export const useGalleryApi = () => {
         return res.data;
     }
 
+    const getPhotosByAlbum = async (album: string) => {
+        const res = await galleryApi.get(`${decodedToken.id}/album/${album}`);
+        return res.data;
+    }
+
     const deletePhoto = async (id: number) => {
         const res = await galleryApi.delete(`/${id}`);
         return res;
@@ -56,5 +61,5 @@ export const useGalleryApi = () => {
         link.parentNode?.removeChild(link);
     }
 
-    return { add, getPhotos, deletePhoto, downloadPhoto };
+    return { add, getPhotos, deletePhoto, downloadPhoto, getPhotosByAlbum };
 }
